@@ -1,0 +1,28 @@
+<div class="flex flex-col my-20 items-center">
+    <h1 class="text-4xl mb-5 font-bold"> Game Complete </h1>
+    <h2 class="text-2xl mb-10"> You scored {{gameState!.score}} out of a possible {{gameState!.tracks.length*1100}} points </h2>
+    <div class="flex mb-10 gap-5">
+        <div *ngFor="let track of tracks" class="hover:brightness-125">
+            <a [href]="track.href" target="_blank" referrerpolicy="no-referrer" [title]="track.title">
+                <img src="{{track.albumArt}}" alt="Album Art for track {{track.title}}" class="w-[150px] h-[150px]">
+            </a>
+        </div>
+    </div>
+    <h3 class="text-xl mb-3"> New High Score! Input your name to be ranked</h3>
+    <form [formGroup]="rankUserForm" class="p-2 mb-20 text-center">
+        <input class="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline "
+            formControlName="username"
+            type="text"
+            placeholder="Enter Username"
+            name="username"
+        >
+        <ng-container *ngIf="rankUserForm.controls['username'].dirty && rankUserForm.controls['username'].touched && rankUserForm.controls['username'].errors">
+            <div *ngIf="rankUserForm.controls['username'].errors['minlength']" class="text-l mb-3 text-red-600"> Username needs to be atleast characters long</div>
+
+            <div *ngIf="rankUserForm.controls['username'].errors['required']" class="text-l mb-3 text-red-600"> Username required</div>
+        </ng-container>
+        <!-- bug to fix: navigateHome cancels form submission -->
+        <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" [disabled]="rankUserForm.invalid" [ngClass]="rankUserForm.invalid ? 'disabled' : ''" (click)="saveUsername(rankUserForm.controls['username'].value); rankUserForm.controls['username'].reset(); navigateHome();"> Save & Play Again</button>
+    </form>
+    <button type="submit" class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"  (click)="navigateHome()">Play Again</button>
+</div>

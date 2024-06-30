@@ -1,0 +1,9 @@
+<div *ngIf="gameState !== null" class="grid grid-rows-[auto,1fr] h-[75vh] min-h-[500px] max-w-4xl m-5 w-full mx-auto">
+  <!-- <app-test (updateState)="updateRootState($event)" [gameState]="gameState" ></app-test> -->
+  <app-game-bar [gameState]="gameState" class="w-full"></app-game-bar>
+  <app-hint-zone (updateState)="updateRootState($event)" [gameState]="gameState" class="w-full flex justify-center items-center"></app-hint-zone>
+  <div class="flex w-full justify-center items-center">
+    <app-player [gameState]="gameState" class="flex m-5 text-center" [track]="gameState.tracks[gameState.round-1].href"></app-player>
+    <app-guesser class="m-5 w-full p-2" (updateState)="updateRootState($event)" [gameState]="gameState"></app-guesser>
+  </div>
+</div>

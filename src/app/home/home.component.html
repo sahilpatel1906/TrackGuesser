@@ -1,0 +1,29 @@
+<div *ngIf="authLoading || configLoading">Loading...</div>
+<div *ngIf="!authLoading && !configLoading">
+  <div class="flex gap-5 items-center justify-center flex-col h-[85vh] min-h-[700px]">
+    <div class="text-3xl">Select a Playlist</div>
+    <div class="grid grid-cols-3 gap-6">
+      <button *ngFor="let playlist of playlists; index as i" class="flex justify-center flex-col items-center p-2 bg-slate-100 hover:bg-slate-300 rounded-md" [class.bg-slate-400]="selectedPlaylist == i" (click)="setPlaylist(i)">
+        <img [src]="playlist.cover" class="w-[150px]"/>
+        <div class="text-2xl">{{ playlist.name }}</div>
+      </button>
+    </div>
+    <div class="text-3xl">Or enter your Spotify playist...</div>
+    <div>
+      <label for="playlist" class="block text-sm font-medium leading-6 text-gray-900">Public Spotify Playlist URL</label>
+      <div class="mt-2 w-[500px]">
+        <input #playlist name="playlist" type="playlist" autocomplete="playlist" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" (keyup)="setCustomPlaylist(playlist.value)">
+      </div>
+    </div>
+    <div class="flex gap-15">
+      <button (click)="selectDifficulty('easy')" [class.border-[5px]]="selectedDifficulty == 'easy'" class="m-2 p-2 bg-green-500 hover:bg-green-400 w-[200px] h-12 font-bold text-white rounded-md border-black shadow-md">Easy</button>
+      <button (click)="selectDifficulty('normal')" [class.border-[5px]]="selectedDifficulty == 'normal'" class="m-2 p-2 bg-yellow-500 hover:bg-yellow-400 w-[200px] h-12 font-bold text-white rounded-md border-black shadow-md">Normal</button>
+      <button (click)="selectDifficulty('hard')" [class.border-[5px]]="selectedDifficulty == 'hard'" class="m-2 p-2 bg-red-500 hover:bg-red-400 w-[200px] h-12 font-bold text-white rounded-md border-black shadow-md">Hard</button>
+    </div>
+      <button (click)="generateGame()" [disabled]="!selectedDifficulty || selectedPlaylist == -2" class="m-2 p-2 bg-blue-500 hover:bg-blue-400 disabled:bg-slate-500 w-[250px] font-black text-white rounded-md border-2 shadow-md text-4xl">Start</button>
+      <div *ngIf="gameState && gameState.round < 6">
+        <h1 class="text-xl text-center">Detected game in progress...</h1>
+        <a routerLink="/game"><button class="m-2 p-2 bg-purple-500 hover:bg-purple-400 disabled:bg-purple-500 w-[250px] font-black text-white rounded-md border-2 shadow-md text-4xl">Continue</button></a>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="flex flex-row gap-4">
+    <div class="w-full">
+        <div class="w-full items-center mb-2">
+            <p class="text-end">{{calculateScore()}}</p>
+            <app-guess-bar class="w-full"
+                [artistGuessState]="(gameState!.roundState!.artistGuessComplete ? 1 : 0) + (gameState!.roundState!.artistGuessed ? 1 : 0)"
+                [wrongGuesses]="gameState ? gameState.roundState.songGuesses : 0" [totalGuesses]="6"
+                [rightGuesses]="this.gameState ? this.gameState.roundState.titleGuessed : false"></app-guess-bar>
+        </div>
+        <div *ngIf="gameState ? !gameState.roundState.artistGuessComplete && !gameState.roundState.ended : 0">
+            <form [formGroup]="guessArtistForm">
+                <input formControlName="artist" type="text" class="mt-2 rounded-md h-10 border-2 w-full text-center uppercase"
+                    placeholder="Guess The Artist   +100" />
+            </form>
+            <div class="flex justify-between">
+                <button class="mt-2 w-5/12 text-center bg-red-400 hover:bg-red-300 text-white rounded-md uppercase" (click)="skipArtistGuess()">Skip Artist
+                    Guess</button>
+                <button class="mt-2 w-5/12 text-center bg-blue-400 hover:bg-blue-300 text-white rounded-md uppercase"
+                    (click)="submitArtistGuess(guessArtistForm.controls['artist'].value)">Submit<div
+                        class="text-xs"> No Penalty </div></button>
+            </div>
+        </div>
+
+        <div class="relative"
+            *ngIf="gameState ? gameState.roundState.artistGuessComplete || gameState.roundState.ended : 0">
+            <section class="top-auto bottom-full absolute border-2 bg-gray-100 w-full"
+                *ngIf="filteredTracks.length > 0 && showAutofill">
+                <ng-template ngFor let-track [ngForOf]="filteredTracks" let-i="index">
+                    <hr *ngIf="i > 0">
+                    <button class="px-2 w-full"
+                        (click)="guessTrackForm.controls['track'].setValue(track.title); showAutofill = false">{{track.title}}</button>
+                </ng-template>
+            </section>
+            <form [formGroup]="guessTrackForm">
+                <input formControlName="track" type="text" class="border-2 rounded-md h-10  w-full text-center uppercase"
+                    placeholder={{getPlaceholder()}} (ngModelChange)="filterTracks($event)"
+                    (keyup)="showAutofill = true" (focus)="showAutofill = true" (blur)="delayedShow(false)"
+                    *ngIf="!this.gameState!.roundState!.ended" />
+            </form>
+            <div *ngIf="this.gameState!.roundState!.ended" class="flex flex-col justify-center items-center">
+                <p *ngIf="!this.gameState!.roundState!.titleGuessed" class="mt-2 text-center uppercase"> Too Bad! +0 score</p>
+                <p *ngIf="this.gameState!.roundState!.titleGuessed"  class="mt-2 text-center uppercase"> Correct! +{{calculateScore()}} score</p>
+                <button *ngIf="nextRoundExists" class="mt-2 bg-purple-500 hover:bg-purple-400 rounded-md text-white  w-5/12 text-center uppercase"
+                    (click)="nextRound()"> Next Round </button>
+                <button *ngIf="!nextRoundExists" class="mt-2 bg-purple-500 hover:bg-purple-400 rounded-md text-white  w-5/12 text-center uppercase"
+                    (click)="navigateResults()"> Show Results! </button>
+            </div>
+            <div *ngIf="!this.gameState?.roundState?.ended"
+                class="flex justify-between">
+                <button *ngIf="nextRoundExists && gameState!.mode == 'normal'"
+                    class="mt-2 w-5/12 text-center bg-red-400 hover:bg-red-300 disabled:bg-gray-400 text-white rounded-md uppercase" (click)="skipTrackGuess()"
+                    [disabled]="this.gameState!.roundState!.songGuesses >= 5"><div class="font-bold">Skip Guess</div><div class="text-xs"> -100
+                    </div></button>
+                <button *ngIf="nextRoundExists" class="mt-2 w-5/12 bg-blue-400 hover:bg-blue-300 rounded-md text-white text-center uppercase"
+                    (click)="submitTrackGuess(guessTrackForm.controls['track'].value)"><div class="font-bold">Submit</div><div
+                        class="text-xs capitalize"> Wrong Guess -100 </div></button>
+                <button *ngIf="!nextRoundExists" class="mt-2 bg-purple-500 hover:bg-purple-400 rounded-md text-white w-5/12 text-center uppercase"
+                    (click)="navigateResults()"> Show Results! </button>
+            </div>
+        </div>
+    </div>
+    <button [disabled]="this.gameState!.roundState!.ended"
+        class="text-center uppercase bg-red-500 hover:bg-red-700 rounded-lg disabled:bg-gray-400 text-white disabled:text-gray-100"
+        (click)="giveUp()"><b>Give Up</b><br><span class="text-xs"> Earn no points </span></button>
+</div>

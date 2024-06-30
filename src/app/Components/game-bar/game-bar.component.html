@@ -1,0 +1,6 @@
+<!-- <p>game-bar works!</p> -->
+<section id="game-bar" class="flex justify-evenly items-center">
+    <div [class.bg-green-400]="gameState?.mode == 'easy'" [class.bg-yellow-400]="gameState?.mode == 'normal'" [class.bg-red-400]="gameState?.mode == 'hard'" class="p-2 rounded-lg text-white font-bold w-[200px] text-center uppercase"> {{(!this.gameState) ? 0 : this.gameState.mode}} </div>
+    <div class="text-lg"> Round <b>{{(!this.gameState) ? 0 : this.gameState.round}}</b> of <b>{{(!this.gameState) ? 0 : this.gameState.tracks.length}}</b></div>
+    <div class="p-2 bg-slate-400 rounded-lg text-white font-bold min-w-[200px] text-center uppercase">Score: {{(!this.gameState) ? 0 : this.gameState.score}}</div>
+</section>

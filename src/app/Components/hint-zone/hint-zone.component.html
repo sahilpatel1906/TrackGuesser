@@ -1,0 +1,33 @@
+<div class="max-w-4xl flex m-5 w-full">
+  <div class="max-w-[250px] z-0">
+    <img [src]="gameState!.tracks[gameState!.round -1].albumArt" class="w-full bg-black border transition-all"
+      [class.blur-2xl]="!gameState!.roundState.albumHint && !gameState!.roundState.ended" />
+  </div>
+  <div class="text-xl grid grid-cols-[150px,1fr] divide-y flex-1 gap-2 ml-5 my-10 z-[1]">
+    <div class="flex justify-start items-center">
+      <button
+        class="bg-red-500 hover:bg-red-400 disabled:bg-slate-500 disabled:text-slate-300 text-white rounded-lg w-full p-2"
+        (click)="useHint('album')" [disabled]="this.gameState?.roundState?.ended || gameState!.roundState!.albumHint">HINT -100P</button>
+    </div>
+    <div class="flex justify-start items-center"><b>Album:</b>&nbsp;{{this.gameState?.roundState?.ended || gameState!.roundState!.albumHint ?
+      gameState!.tracks![gameState!.round-1].album : '???'}}</div>
+    <div class="flex justify-start items-center">
+      <button
+        class="bg-red-500 hover:bg-red-400 disabled:bg-slate-500 disabled:text-slate-300 text-white rounded-lg w-full p-2"
+        (click)="useHint('artist')"
+        [disabled]="this.gameState?.roundState?.ended || gameState!.roundState!.artistHint || gameState!.roundState!.artistGuessed">HINT -200P</button>
+    </div>
+    <div class="flex justify-start items-center"><b>Artist(s):</b>&nbsp;{{this.gameState?.roundState?.ended || gameState!.roundState!.artistGuessed ||
+      gameState!.roundState!.artistHint ? gameState!.tracks![gameState!.round -1].artist.join(', ') : '???'}}</div>
+
+    <div class="flex justify-start items-center">
+      <button
+        class="bg-red-500 hover:bg-red-400 disabled:bg-slate-500 disabled:text-slate-300 text-white rounded-lg w-full p-2"
+        (click)="useHint('title')" [disabled]="this.gameState?.roundState?.ended || gameState!.roundState!.titleHint">HINT -100P</button>
+    </div>
+    <div *ngIf="!this.gameState!.roundState!.ended" class="flex justify-start items-center"><b>Title:</b>&nbsp;{{gameState!.roundState!.titleHint ?
+      gameState!.tracks![gameState!.round -1].title.substring(0,1)+'...' : '???'}}</div>
+    <div *ngIf="this.gameState!.roundState!.ended" class="flex justify-start items-center"><b>Title:</b>&nbsp;{{
+      gameState!.tracks![gameState!.round -1].title}}</div>
+  </div>
+</div>
